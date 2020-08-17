@@ -78,7 +78,9 @@ public class OwOTools {
      */
     public static void addOwO(String... owos) {
         // Using an intermediate list to prevent NPEs from happening before the array was initialized
-        intermediate.addAll(Arrays.asList(owos));
+        for (String owo : owos) {
+			intermediate.add(owo + " what's this");
+		}
     }
 
     /**
