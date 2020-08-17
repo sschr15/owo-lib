@@ -3,8 +3,9 @@ package sschr15.owolib.api;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -36,22 +37,22 @@ public class OwOTools {
         owoList = new ArrayList<>();
 
         try {
-            File owoCfg = new File(FabricLoader.getInstance().getConfigDir().toFile(), "owo.txt");
+            Path owoCfg = FabricLoader.getInstance().getConfigDir().resolve("owo.txt");
 
-            if (owoCfg.createNewFile()) {
-                FileWriter writer = new FileWriter(owoCfg);
-                writer.write(String.join("\n",
-                        "# This file contains all custom owos that you want!",
-                        "# Lines that start with a # will not be added to the list.",
-                        "",
-                        "# Example:",
-                        "# owo (will be shown as \"owo what's this\")",
-                        "# cheese (will be shown as \"cheese what's this\")",
-                        "") + String.join("\n", defaults));
-                writer.close();
+            if (!Files.exists(owoCfg)) {
+                try (BufferedWriter writer = Files.newBufferedWriter(owoCfg)) {
+                    writer.write(String.join("\n",
+                            "# This file contains all custom owos that you want!",
+                            "# Lines that start with a # will not be added to the list.",
+                            "",
+                            "# Example:",
+                            "# owo (will be shown as \"owo what's this\")",
+                            "# cheese (will be shown as \"cheese what's this\")",
+                            "") + String.join("\n", defaults));
+                }
             }
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(owoCfg))) {
+            try (BufferedReader reader = Files.newBufferedReader(owoCfg)) {
                 reader.lines().forEach(s -> {
                     if (!s.isEmpty() && !s.startsWith("#")) owoList.add(s + " what's this");
                 });
